@@ -25,9 +25,20 @@ This can be optained by speaking to Dell Tech Direct or by finding a working pub
 
 ___
 
-This script was originally created and intented to be used to allow easy asset tracking using an SCCM configuration item.
+### Switches and Parameters.  
 
-I plan to update the module in the future so that you can get asset information on multiple service tags from other machines, and optionally select if you want the registry branded with the information.
+The function Get-DellAssetInformation by default will only grab the information from dell for the mchine that the script is being run from, and will not show or brand any information.
+
+You can change this behaviour by specifying the service tag you want to check using the -ServiceTag Parameter
+E.g. Get-DellAssetInformation -ServiceTag "F11F111"
+
+You can get information within the console by using the -Show switch.
+
+You can choose to brand the information retrieved in to the registry using the -Brand switch.  
+By default, the location for this information will be HKLM\HARDWARE\WARRANTY.  
+This can be changed by changing the `$registryPath` variable
+
+___
 
 
-### This is originally based on code from reddit user Kreloc.
+### This is originally based on code from a reddit user by the name of randomness_whoaaa.
