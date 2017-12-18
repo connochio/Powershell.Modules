@@ -1,7 +1,7 @@
 # Dell Warranty Check and Branding
 
 
-Within this repository there is both a module you can use (contained within 'Get-DellWarranty') and a script fin the archived folder than you can run on a standalone basis.  
+Within this repository there is both a module you can use (contained within 'Get-DellWarranty') and a script in the archived folder than you can run on a standalone basis.  
 
 The script will query using the Dell API key and return the following information:
 
