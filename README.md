@@ -25,7 +25,9 @@ This can be optained by speaking to Dell Tech Direct or by finding a working pub
 
 ___
 
-This script was originally created to allow easy asset tracking using an SCCM configuration item.
+This script was originally created and intented to be used to allow easy asset tracking using an SCCM configuration item.
 
 I plan to update the module in the future so that you can get asset information on multiple service tags from other machines, and optionally select if you want the registry branded with the information.
 
+
+### This is originally based on code from reddit user Kreloc.
