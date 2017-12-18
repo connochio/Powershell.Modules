@@ -1,6 +1,6 @@
-﻿
+﻿        $APIKey = "XXXXXXXXXX"
         $ServiceTag = $(Get-WmiObject -Class "Win32_Bios").SerialNumber
-        $URI = "https://api.dell.com/support/assetinfo/v4/getassetwarranty/${ServiceTag}?apikey=XXXXXXXXXX"
+        $URI = "https://api.dell.com/support/assetinfo/v4/getassetwarranty/${ServiceTag}?apikey=${APIKey}"
         $Request = Invoke-RestMethod -URI $URI -Method GET
         $Warranties = $Request.AssetWarrantyResponse.assetentitlementdata | where {$_.ServiceLevelDescription -NE 'Dell Digitial Delivery' -and $_.ServiceLevelDescription -NE 'Collect and Return Support'}
         $AssetDetails = $Request.AssetWarrantyResponse.assetheaderdata
