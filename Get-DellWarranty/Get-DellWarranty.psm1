@@ -39,7 +39,7 @@
         if ($Brand){
             if([bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544") -ne $true){Write-Host "`nYou need use an elevated PowerShell window for -Brand to work"}
             else {
-                $registryPath = "HKLM:\HARDWARE\WARRANTY"
+                $registryPath = "HKLM:\SOFTWARE\WARRANTY"
                 If (-NOT (Test-Path $registryPath)) {
                     New-Item $registryPath | Out-Null
                     }
