@@ -1,4 +1,4 @@
-﻿Function Global:Get-DellAssetInformation {
+﻿Function Global:Get-DellWarranty {
     
     Param(
           [Switch] $Api,
