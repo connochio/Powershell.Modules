@@ -37,7 +37,7 @@ You can get information within the console by using `-Show`.
 The `-Show` switch is triggered by default when using `-ServiceTag`.
 
 You can choose to brand the information retrieved in to the registry using `-Brand`.  
-By default, the location for this information will be HKLM\HARDWARE\WARRANTY  
+By default, the location for this information will be HKLM\SOFTWARE\WARRANTY  
 This can be changed by changing the `$registryPath` variable.  
 This switch will not work unless you are in an elevated powershell window however, and it will warn you as such.
 
