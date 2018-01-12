@@ -24,11 +24,11 @@
             $EndDateD = $EndDate.split("T") | select -First 1
             $StartDate = $Request.AssetWarrantyResponse.assetentitlementdata | where {$_.ServiceLevelDescription -NE 'Dell Digitial Delivery' -and $_.ServiceLevelDescription -NE 'Collect and Return Support'} | select -expand StartDate
             $StartDateC = $StartDate.split("T") | select -Last 2
-            $StartDated = $StartDateC.split("T") | select -First 1
+            $StartDateD = $StartDateC.split("T") | select -First 1
             $Support = $Request.AssetWarrantyResponse.assetentitlementdata | where {$_.ServiceLevelDescription -NE 'Dell Digitial Delivery' -and $_.ServiceLevelDescription -NE 'Collect and Return Support'} | select -expand ServiceLevelDescription
             $Device = $Request.AssetWarrantyResponse.ProductHeaderData | select -expand SystemDescription
             $Shipped = $Request.AssetWarrantyResponse.AssetHeaderData | select -expand ShipDate
-            $ShippedD = $Shipped.split("T") | select -SkipLast 1
+            $ShippedD = $Shipped.split("T") | select -First 1
 
         if ($Show -eq $true){
             Write-Host "`nThis machine's warranty started: $StartDateD"
