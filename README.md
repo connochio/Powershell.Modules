@@ -1,18 +1,17 @@
 # Dell Warranty Check and Branding
 
-
-Within this repository there is both a module you can use (contained within 'Get-DellWarranty') and a script in the archived folder than you can run on a standalone basis.  
-
-The script will query using the Dell API key and return the following information:
+The module will query using the Dell API key and return the following information:
 
    * Warranty Start Date (earliest date available)  
    * Warranty End Date (latest date available)  
    * Service Tag  
    * Machine Model  
    * Original Ship Date  
-   * Type of warranty  
+   * Type of warranty (most recent warranty level shown by default)
 
 It can then brand the above information to the registry under HKLM\SOFTWARE\WARRANTY  
+
+You can install this using the command `Install-Module -Name Get-DellWarranty` within an elevated powershell session.
 
 ___
 
@@ -36,12 +35,10 @@ E.g. `Get-DellWarranty -Show -Brand`
 You can get information within the console by using `-Show`.  
 The `-Show` switch is triggered by default when using `-ServiceTag`.
 
+You can use the switch `-Full` to get more information from a service tag.
+This includes the original ship date and older (if applicable) warranty levels that the machine previously had.
+
 You can choose to brand the information retrieved in to the registry using `-Brand`.  
 By default, the location for this information will be HKLM\SOFTWARE\WARRANTY  
 This can be changed by changing the `$registryPath` variable.  
 This switch will not work unless you are in an elevated powershell window however, and it will warn you as such.
-
-___
-
-
-### This is originally based on code from a reddit user by the name of randomness_whoaaa.
