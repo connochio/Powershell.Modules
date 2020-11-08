@@ -35,7 +35,7 @@ $ShipDate = [datetime]::ParseExact(((($content.shipDate).split("T"))[-2]), "yyyy
 $Model = $content.systemDescription
 $Uid = $content.id
 
-    $registryPath = "HKLM:\SOFTWARE\Dell\WARRANTY"
+    $registryPath = "HKLM:\SOFTWARE\WARRANTY"
             If (-NOT (Test-Path $registryPath)) {
                 New-Item $registryPath -Force | Out-Null
                 }
