@@ -1,0 +1,23 @@
+[ SMS_Report (TRUE),
+  SMS_Group_Name ("Warranty"),
+  SMS_Class_ID ("Warranty"),
+  Namespace ("\\\\\\\\.\\\\root\\\\cimv2") ]
+class Warranty : SMS_Class_Template
+{
+    [ SMS_Report (TRUE), key ]
+    String     KeyName;
+    [ SMS_Report (TRUE) ]
+    String     DellId;
+    [ SMS_Report (TRUE) ]
+    String     Model;
+    [ SMS_Report (TRUE) ]
+    String     OriginalShipDate;
+    [ SMS_Report (TRUE) ]
+    String     ServiceTag;
+    [ SMS_Report (TRUE) ]
+    String     WarrantyEndDate;
+    [ SMS_Report (TRUE) ]
+    String     WarrantyStartDate;
+    [ SMS_Report (TRUE) ]
+    String     WarrantySupportLevel;
+};
