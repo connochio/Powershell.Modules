@@ -13,18 +13,15 @@ It can then brand the above information to the registry under HKLM\SOFTWARE\WARR
 
 You can install this using the command `Install-Module -Name Get-DellWarranty` within an elevated powershell session.
 
-___
-
-### You will need to update the API Key by running `Get-DellWarranty -Api`   
+## API Key
+You will need to update the API Key by running `Get-DellWarranty -Api`    
 This will then save the API to a file in your appdata folder.  
 
 The API can be optained by speaking to Dell Tech Direct or by finding a working public API Key.  
 
 If you receive a new API Key, or yours has stopped working, you can amend it by running `Get-DellWarranty -Api` again.  
 
-___
-
-### Switches and Parameters.  
+## Switches and Parameters.  
 
 The function Get-DellWarranty by default will only grab the information from dell for the machine that the script is being run from, and will not show or brand any information.
 
