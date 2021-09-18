@@ -5,7 +5,8 @@ Function Global:Get-DellWarranty {
           [Switch] $Brand,  
           [String] $ServiceTag = ((Get-WmiObject -Class "Win32_Bios").SerialNumber),
           [Switch] $Show,
-          [Switch] $Full
+          [Switch] $Full,
+		  [Switch] $ReturnObj
          )
 
     if ($Api -ne $true){
@@ -33,21 +34,27 @@ Function Global:Get-DellWarranty {
             $response = Invoke-WebRequest -uri https://apigtwb2c.us.dell.com/PROD/sbil/eapi/v5/asset-entitlements${body} -Headers @{"Authorization"="bearer ${AuthKey}";"Accept"="application/json"}
             $content = $response.Content | ConvertFrom-Json
 
-            $WarrantyEndDateRaw = (($content.entitlements.endDate).split("T"))[-2]
+            #Sort, then parse the first (start) and last (end) warranty entitlement
+			$sortedEntitlements = $content.entitlements | Sort endDate #Dell doesn't list in order. This sorts so the latest entitlement is last.
+            $WarrantyEndDateRaw = (($sortedEntitlements.endDate | Select -Last 1).split("T"))[0]
             $WarrantyEndDate = [datetime]::ParseExact($WarrantyEndDateRaw, "yyyy-MM-dd", $null)
-            $WarrantyStartDateRaw = (($content.entitlements.startDate).split("T"))[-2]
+            $WarrantyStartDateRaw = (($sortedEntitlements.startDate | Select -First 1).split("T"))[0]
             $WarrantyStartDate = [datetime]::ParseExact($WarrantyStartDateRaw, "yyyy-MM-dd", $null)
-            $WarrantyLevel = ($content.entitlements.serviceLevelDescription)[-1]
+            $WarrantyLevel = ($sortedEntitlements.serviceLevelDescription | Select -Last 1)
             $ShipDateRaw = (($content.shipDate).split("T"))[0]
             $ShipDate = [datetime]::ParseExact($ShipDateRaw, "yyyy-MM-dd", $null)
-            $Model = $content.systemDescription
+			if ($content.systemDescription){$Model = $content.systemDescription} else { $Model = $content.productLineDescription} #Somtimes Dell blanks the systemDescription. systemDescription likely has the data
+            
 
             if ($full -eq $true){
                 $Show -eq $true | Out-Null}
                 
             if ($Show -eq $true){
                 $Today = get-date
-                if ($Today -ge $WarrantyEndDate){Write-Host "`nWarranty has expired for $ServiceTag ($Model) " -ForegroundColor White -BackgroundColor Red}
+                if ($Today -ge $WarrantyEndDate){
+						Write-Host "`nWarranty has expired for $ServiceTag ($Model) " -ForegroundColor White -BackgroundColor Red
+						$WarrantyExpired = $true  #Variable useful for mass export
+						}
                     Write-Host "`nThe machine's warranty started:" -NoNewline
                     Write-Host " $WarrantyStartDate" -ForegroundColor Cyan
                     Write-Host "The machine's warranty ends:" -NoNewline
@@ -55,6 +62,8 @@ Function Global:Get-DellWarranty {
                     Write-Host "The current support level is:" -NoNewline
                     Write-Host " $WarrantyLevel`n" -ForegroundColor Cyan
                     if ($Full -eq $true){
+                        Write-Host "ServiceTag:"-NoNewline #Service Tag is helpful for large script purposes
+                        Write-Host " $ServiceTag" -ForegroundColor Cyan
                         Write-Host "The model is:"-NoNewline
                         Write-Host " $Model" -ForegroundColor Cyan
                         Write-Host "The ship date is:" -NoNewline
@@ -80,12 +89,25 @@ Function Global:Get-DellWarranty {
                     New-ItemProperty -Path $registryPath -Name 'ServiceTag' -Value $ServiceTag -PropertyType ExpandString -Force | Out-Null
                 }
             }
+            if ($ReturnObj){
+					#Returns data as a PSObject which can be used for batch/scripting purposes
+					$Obj = New-Object psobject
+					$Obj | Add-Member -Type NoteProperty	-Name 'WarrantyStartDate' 		-Value $WarrantyStartDate
+                    $Obj | Add-Member -Type NoteProperty	-Name 'WarrantyEndDate' 		-Value $WarrantyEndDate
+					$Obj | Add-Member -Type NoteProperty	-Name 'WarrantyExpired' 		-Value $WarrantyExpired
+                    $Obj | Add-Member -Type NoteProperty	-Name 'WarrantySupportLevel' 	-Value $WarrantyLevel
+                    $Obj | Add-Member -Type NoteProperty	-Name 'Model' 					-Value $Model
+                    $Obj | Add-Member -Type NoteProperty	-Name 'OriginalShipDate' 		-Value $ShipDate
+                    $Obj | Add-Member -Type NoteProperty	-Name 'ServiceTag' 				-Value $ServiceTag
+					Return $Obj
+            }
         }
     }
     else { 
         Read-Host -Prompt "`nPlease provide API Key" | Out-File $env:appdata\Microsoft\Windows\PowerShell\DellKey.txt -Force
         Read-Host -Prompt "`nNow please provide API Secret" | Out-File $env:appdata\Microsoft\Windows\PowerShell\DellSec.txt -Force
         Write-Host "`nYou can now run this with -Brand and -ServiceTag to get warranty information" -ForegroundColor Green
+        Write-Host "`nYou can also use -Full -Show and -ReturnObj to adjust the output level and format" -ForegroundColor Green #Describes other options
         Write-Host "If you need to change the API Key, please run 'Get-DellWarranty -Api' again`n" -ForegroundColor Green
     }
 }
