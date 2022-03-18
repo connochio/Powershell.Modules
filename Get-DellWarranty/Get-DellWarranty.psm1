@@ -47,7 +47,7 @@ Function Global:Get-DellWarranty {
             
 
             if ($full -eq $true){
-                $Show -eq $true | Out-Null}
+                $Show = $true}
                 
             if ($Show -eq $true){
                 $Today = get-date
